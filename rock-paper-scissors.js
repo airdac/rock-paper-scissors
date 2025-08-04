@@ -1,6 +1,59 @@
 const choices = ['rock', 'paper', 'scissors'];
 
-function getcomputerChoice() {
+let humanScore = 0;
+let computerScore = 0;
+let round = 1;
+
+const generalInfo = document.querySelector("#general-info");
+
+generalInfo.textContent =
+  "Welcome to Rock Paper Scissors! You will now play five rounds against the computer.";
+
+const humanScoreFeedback = document.querySelector("#human-score");
+const computerScoreFeedback = document.querySelector("#computer-score");
+
+humanScoreFeedback.textContent = `Human score: ${humanScore}`;
+computerScoreFeedback.textContent = `Computer score: ${computerScore}`;
+
+const roundResult = document.querySelector("#round-result");
+
+const menu = document.querySelector("#menu");
+
+menu.addEventListener("click", (event) => {
+  if (round == 1) {
+    humanScore = 0;
+    computerScore = 0;
+
+    humanScoreFeedback.textContent = `Human score: ${humanScore}`;
+    computerScoreFeedback.textContent = `Computer score: ${computerScore}`;
+  }
+
+  round++;
+  generalInfo.textContent = `Now playing round ${round}...`;
+
+  const target = event.target;
+
+  const humanChoice = choices.indexOf(target.id);
+  const computerChoice = getComputerChoice();
+
+  playRound(humanChoice, computerChoice);
+
+  if (round > 5) {
+    if (humanScore > computerScore) {
+      generalInfo.textContent = `Game finished! You win!
+      Click any button to play again.`;
+    } else if (humanScore === computerScore) {
+      generalInfo.textContent = `Game finished! It's a tie.
+      Click any button to play again.`;
+    } else {
+      generalInfo.textContent = `Game finished! You lose...
+      Click any button to play again.`;
+    }
+    round = 1;
+  }
+});
+
+function getComputerChoice() {
     return Math.floor(Math.random() * choices.length);
 }
 
@@ -23,49 +76,17 @@ function capitalizeFirstLetter(val) {
   return val.charAt(0).toUpperCase() + val.slice(1);
 }
 
-function playGame() {
-    let humanScore = 0;
-    let computerScore = 0;
+function playRound(humanChoice, computerChoice) {
+  if (humanChoice === (computerChoice + 1) % choices.length) {
+    roundResult.textContent = `You win! ${capitalizeFirstLetter(choices[humanChoice])} beats ${choices[computerChoice]}`;
+    humanScore++;
+    humanScoreFeedback.textContent = `Human score: ${humanScore}`;
 
-    function playRound(humanChoice, computerChoice) {
-      if (
-        humanChoice > computerChoice ||
-        (humanChoice == 0 && computerChoice == choices.length-1)
-      ) {
-        console.log(`You win! ${capitalizeFirstLetter(choices[humanChoice])} beats ${choices[computerChoice]}`);
-        humanScore++;
-      } else if (humanChoice === computerChoice) {
-        console.log("That's a tie.");
-      } else {
-        console.log(
-          `You lose... ${capitalizeFirstLetter(choices[computerChoice])} beats ${
-            choices[humanChoice]
-          }`
-        );
-        computerScore++;
-      }
-    }
-
-    console.log('Welcome to Rock Paper Scissors! You will now play three rounds against the computer.')
-
-    for (let i = 1; i <= 3; i++) {
-        console.log(`Let's play round ${i}!`)
-        let humanChoice = getHumanChoice();
-        let computerChoice = getcomputerChoice();
-        playRound(humanChoice, computerChoice);
-    }
-
-    console.log(`Game finished! The final scores are
-        
-        You: ${humanScore}
-        Computer: ${computerScore}`)
-    if (humanScore > computerScore) {
-        console.log('You win the game!')
-    } else if (humanScore == computerScore) {
-        console.log("The game ends with a tie.")
-    } else {
-        console.log("You lose the game...")
-    }
+  } else if (humanChoice === computerChoice) {
+    roundResult.textContent = "That's a tie.";
+  } else {
+    roundResult.textContent = `You lose... ${capitalizeFirstLetter(choices[computerChoice])} beats ${choices[humanChoice]}`;
+    computerScore++;
+    computerScoreFeedback.textContent = `Computer score: ${computerScore}`;
+  }
 }
-
-playGame();
