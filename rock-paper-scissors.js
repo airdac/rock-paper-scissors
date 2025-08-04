@@ -1,8 +1,7 @@
 const choices = ['rock', 'paper', 'scissors'];
 
-function getComputerChoice() {
-    const randomInt = Math.floor(Math.random() * choices.length);
-    return choices[randomInt];
+function getcomputerChoice() {
+    return Math.floor(Math.random() * choices.length);
 }
 
 function getHumanChoice() {
@@ -13,7 +12,7 @@ function getHumanChoice() {
     }
     humanPrompt = humanPrompt.toLowerCase();
     if (choices.includes(humanPrompt)) {
-        return humanPrompt;
+        return choices.indexOf(humanPrompt);;
     } else {
         alert("That isn't a valid choice!");
         return getHumanChoice();
@@ -21,7 +20,7 @@ function getHumanChoice() {
 }
 
 function capitalizeFirstLetter(val) {
-  return String(val).charAt(0).toUpperCase() + String(val).slice(1);
+  return val.charAt(0).toUpperCase() + val.slice(1);
 }
 
 function playGame() {
@@ -29,29 +28,30 @@ function playGame() {
     let computerScore = 0;
 
     function playRound(humanChoice, computerChoice) {
-      const humanIdx = choices.indexOf(humanChoice);
-      const computerIdx = choices.indexOf(computerChoice);
-
       if (
-        humanIdx > computerIdx ||
-        (humanIdx == 0 && computerIdx == choices.length-1)
+        humanChoice > computerChoice ||
+        (humanChoice == 0 && computerChoice == choices.length-1)
       ) {
-        console.log(`You win! ${capitalizeFirstLetter(humanChoice)} beats ${computerChoice}`);
+        console.log(`You win! ${capitalizeFirstLetter(choices[humanChoice])} beats ${choices[computerChoice]}`);
         humanScore++;
-      } else if (humanIdx == computerIdx) {
-        console.log("That's a tie!");
+      } else if (humanChoice === computerChoice) {
+        console.log("That's a tie.");
       } else {
-        console.log(`You lose! ${capitalizeFirstLetter(computerChoice)} beats ${humanChoice}`);
+        console.log(
+          `You lose... ${capitalizeFirstLetter(choices[computerChoice])} beats ${
+            choices[humanChoice]
+          }`
+        );
         computerScore++;
       }
     }
 
-    console.log('Welcome to Rock Paper Scissors! You will now play five rounds against the computer.')
+    console.log('Welcome to Rock Paper Scissors! You will now play three rounds against the computer.')
 
-    for (let i = 0; i <= 5; i++) {
-        console.log(`Let's play round ${i+1}!`)
+    for (let i = 1; i <= 3; i++) {
+        console.log(`Let's play round ${i}!`)
         let humanChoice = getHumanChoice();
-        let computerChoice = getComputerChoice();
+        let computerChoice = getcomputerChoice();
         playRound(humanChoice, computerChoice);
     }
 
@@ -60,11 +60,11 @@ function playGame() {
         You: ${humanScore}
         Computer: ${computerScore}`)
     if (humanScore > computerScore) {
-        console.log('So you win!')
+        console.log('You win the game!')
     } else if (humanScore == computerScore) {
-        console.log("So it's a tie.")
+        console.log("The game ends with a tie.")
     } else {
-        console.log("So you lose...")
+        console.log("You lose the game...")
     }
 }
 
